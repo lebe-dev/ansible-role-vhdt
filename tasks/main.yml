@@ -1,0 +1,62 @@
+- name: Install curl
+  yum:
+    name: curl
+    state: latest
+  tags:
+  - vhdt
+
+- name: Create configuration for zabbix agent
+  template:
+    src: vhosts.conf
+    dest: /etc/zabbix/zabbix_agentd.d/vhosts.conf
+    owner: zabbix
+    group: zabbix
+  tags:
+  - vhdt
+
+- name: Create vhdt path
+  file:
+    path: "{{ vhdt_install_path }}"
+    state: present
+    owner: zabbix
+    group: zabbix
+  tags:
+  - vhdt
+
+- name: Install vhdt
+  ansible.builtin.unarchive:
+    src: https://github.com/lebe-dev/vhost-discovery-tool/releases/download/1.5.1/vhdt-1.5.1-static.zip
+    dest: "{{ vhdt_install_path }}"
+    remote_src: yes
+  tags:
+  - vhdt
+
+- name: Add permission for zabbix user to execute vhdt
+  ansible.posix.acl:
+    path: "{{ vhdt_install_path }}/vhdt"
+    entity: zabbix
+    etype: user
+    permissions: rx
+    state: present
+
+- name: Add permission for zabbix user to read configs
+  ansible.posix.acl:
+    path: "{{ item }}"
+    entity: zabbix
+    etype: user
+    permissions: rx
+    default: yes
+    state: present
+  loop:
+  - "{{ vhdt_nginx_vhosts_root }}"
+  - "{{ vhdt_apache_vhosts_root }}"
+  when: vhdt_allow_zabbix_user_read_vhosts
+  tags:
+  - vhdt
+
+- name: Restart zabbix-agent
+  service:
+    name: zabbix-agent
+    state: restarted
+  tags:
+  - vhdt
