@@ -43,11 +43,15 @@
     etype: user
     permissions: rx
     state: present
+  tags:
+  - vhdt
 
 - name: Check if nginx vhosts root exist
   stat:
     path: "{{ vhdt_nginx_vhosts_root }}"
   register: nginx_path
+  tags:
+  - vhdt
 
 - name: Add permission for zabbix user to read configs from nginx
   ansible.posix.acl:
@@ -65,6 +69,8 @@
   stat:
     path: "{{ vhdt_apache_vhosts_root }}"
   register: apache_path
+  tags:
+  - vhdt
 
 - name: Add permission for zabbix user to read configs from apache
   ansible.posix.acl:
