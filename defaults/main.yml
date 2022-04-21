@@ -7,3 +7,6 @@ vhdt_install_path: /etc/zabbix/vhdt
 
 # Allow zabbix user read nginx and apache configs
 vhdt_allow_zabbix_user_read_vhosts: True
+
+# When download from github
+vhdt_validate_certs: True
