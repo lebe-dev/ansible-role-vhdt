@@ -1,17 +1,17 @@
 - name: Download vhdt
   become: no
   get_url:
-    url: https://github.com/lebe-dev/vhost-discovery-tool/releases/download/1.5.1/vhdt-1.5.1-static.zip
-    dest: /tmp/vhdt-latest.zip
-    mode: '0750'
+      url: https://github.com/lebe-dev/vhost-discovery-tool/releases/download/1.5.1/vhdt-1.5.1-static.zip
+      dest: /tmp/vhdt-latest.zip
+      mode: '0750'
   delegate_to: localhost
   tags:
   - vhdt
 
 - name: Install vhdt
   ansible.builtin.unarchive:
-    src: /tmp/vhdt-latest.zip
-    dest: "{{ vhdt_install_path }}"
-    remote_src: no
+      src: /tmp/vhdt-latest.zip
+      dest: "{{ vhdt_install_path }}"
+      remote_src: no
   tags:
   - vhdt
