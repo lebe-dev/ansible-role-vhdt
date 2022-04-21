@@ -1,25 +1,25 @@
 - name: Install curl
   yum:
-    name: curl
-    state: present
+      name: curl
+      state: present
   tags:
   - vhdt
 
 - name: Create configuration for zabbix agent
   template:
-    src: vhosts.conf
-    dest: /etc/zabbix/zabbix_agentd.d/vhosts.conf
-    owner: zabbix
-    group: zabbix
+      src: vhosts.conf
+      dest: /etc/zabbix/zabbix_agentd.d/vhosts.conf
+      owner: zabbix
+      group: zabbix
   tags:
   - vhdt
 
 - name: Create vhdt path
   file:
-    path: "{{ vhdt_install_path }}"
-    state: directory
-    owner: zabbix
-    group: zabbix
+      path: "{{ vhdt_install_path }}"
+      state: directory
+      owner: zabbix
+      group: zabbix
   tags:
   - vhdt
 
@@ -28,57 +28,57 @@
 
 - name: Install vhdt
   ansible.builtin.unarchive:
-    src: https://github.com/lebe-dev/vhost-discovery-tool/releases/download/1.5.1/vhdt-1.5.1-static.zip
-    dest: "{{ vhdt_install_path }}"
-    remote_src: yes
-    validate_certs: "{{ vhdt_validate_certs }}"
+      src: https://github.com/lebe-dev/vhost-discovery-tool/releases/download/1.5.1/vhdt-1.5.1-static.zip
+      dest: "{{ vhdt_install_path }}"
+      remote_src: yes
+      validate_certs: "{{ vhdt_validate_certs }}"
   when: ansible_distribution_major_version != "6"
   tags:
   - vhdt
 
 - name: Add permission for zabbix user to execute vhdt
   ansible.posix.acl:
-    path: "{{ vhdt_install_path }}/vhdt"
-    entity: zabbix
-    etype: user
-    permissions: rx
-    state: present
+      path: "{{ vhdt_install_path }}/vhdt"
+      entity: zabbix
+      etype: user
+      permissions: rx
+      state: present
   tags:
   - vhdt
 
 - name: Check if nginx vhosts root exist
   stat:
-    path: "{{ vhdt_nginx_vhosts_root }}"
+      path: "{{ vhdt_nginx_vhosts_root }}"
   register: nginx_path
   tags:
   - vhdt
 
 - name: Add permission for zabbix user to read configs from nginx
   ansible.posix.acl:
-    path: "{{ vhdt_nginx_vhosts_root }}"
-    entity: zabbix
-    etype: user
-    permissions: rx
-    default: yes
-    state: present
+      path: "{{ vhdt_nginx_vhosts_root }}"
+      entity: zabbix
+      etype: user
+      permissions: rx
+      default: yes
+      state: present
   when: vhdt_allow_zabbix_user_read_vhosts and nginx_path.stat.exists
   tags:
   - vhdt
 
 - name: Check if apache vhosts root exist
   stat:
-    path: "{{ vhdt_apache_vhosts_root }}"
+      path: "{{ vhdt_apache_vhosts_root }}"
   register: apache_path
   tags:
   - vhdt
 
 - name: Add permission for zabbix user to read configs from apache
   ansible.posix.acl:
-    path: "{{ vhdt_apache_vhosts_root }}"
-    entity: zabbix
-    etype: user
-    permissions: rx
-    default: yes
+      path: "{{ vhdt_apache_vhosts_root }}"
+      entity: zabbix
+      etype: user
+      permissions: rx
+      default: yes
     state: present
   when: vhdt_allow_zabbix_user_read_vhosts and apache_path.stat.exists
   tags:
