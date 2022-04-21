@@ -44,18 +44,37 @@
     permissions: rx
     state: present
 
-- name: Add permission for zabbix user to read configs
+- name: Check if nginx vhosts root exist
+  stat:
+    path: "{{ vhdt_nginx_vhosts_root }}"
+  register: nginx_path
+
+- name: Add permission for zabbix user to read configs from nginx
   ansible.posix.acl:
-    path: "{{ item }}"
+    path: "{{ vhdt_nginx_vhosts_root }}"
     entity: zabbix
     etype: user
     permissions: rx
     default: yes
     state: present
-  loop:
-  - "{{ vhdt_nginx_vhosts_root }}"
-  - "{{ vhdt_apache_vhosts_root }}"
-  when: vhdt_allow_zabbix_user_read_vhosts
+  when: vhdt_allow_zabbix_user_read_vhosts and nginx_path.stat.exists
+  tags:
+  - vhdt
+
+- name: Check if apache vhosts root exist
+  stat:
+    path: "{{ vhdt_apache_vhosts_root }}"
+  register: apache_path
+
+- name: Add permission for zabbix user to read configs from apache
+  ansible.posix.acl:
+    path: "{{ vhdt_apache_vhosts_root }}"
+    entity: zabbix
+    etype: user
+    permissions: rx
+    default: yes
+    state: present
+  when: vhdt_allow_zabbix_user_read_vhosts and apache_path.stat.exists
   tags:
   - vhdt
 
