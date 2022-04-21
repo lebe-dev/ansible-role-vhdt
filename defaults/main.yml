@@ -9,4 +9,4 @@ vhdt_install_path: /etc/zabbix/vhdt
 vhdt_allow_zabbix_user_read_vhosts: True
 
 # When download from github
-vhdt_validate_certs: True
+vhdt_validate_certs: yes
