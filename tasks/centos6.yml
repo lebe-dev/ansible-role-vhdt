@@ -2,7 +2,8 @@
   get_url:
     url: https://github.com/lebe-dev/vhost-discovery-tool/releases/download/1.5.1/vhdt-1.5.1-static.zip
     dest: vhdt-latest.zip
-    delegate_to: localhost
+    remote_src: yes
+  delegate_to: localhost
   tags:
   - vhdt
 
