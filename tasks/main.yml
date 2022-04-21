@@ -1,7 +1,7 @@
 - name: Install curl
   yum:
     name: curl
-    state: latest
+    state: present
   tags:
   - vhdt
 
