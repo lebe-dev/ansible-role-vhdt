@@ -3,3 +3,7 @@ vhdt_apache_vhosts_root: /etc/httpd/conf.d
 vhdt_ignore_masks: test
 vhdt_log_level: off
 vhdt_work_dir: /etc/zabbix
+vhdt_install_path: /etc/zabbix/vhdt
+
+# Allow zabbix user read nginx and apache configs
+vhdt_allow_zabbix_user_read_vhosts: True
