@@ -28,7 +28,7 @@
     src: https://github.com/lebe-dev/vhost-discovery-tool/releases/download/1.5.1/vhdt-1.5.1-static.zip
     dest: "{{ vhdt_install_path }}"
     remote_src: yes
-    validate_certs: {{ vhdt_validate_certs }}
+    validate_certs: "{{ vhdt_validate_certs }}"
   tags:
   - vhdt
 
